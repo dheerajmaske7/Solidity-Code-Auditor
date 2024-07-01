@@ -1,0 +1,35 @@
+line_number,code,vulnerability
+1,pragma solidity ^0.4.22;,no
+2,contract FibonacciBalance {,no
+3,address public fibonacciLibrary;,no
+4,uint public calculatedFibNumber;,no
+5,uint public start = 3;,no
+6,uint public withdrawalCounter;,no
+7,"bytes4 constant fibSig = bytes4(sha3(""setFibonacci(uint256)""));",no
+8,constructor(address _fibonacciLibrary) public payable {,no
+9,fibonacciLibrary = _fibonacciLibrary;,no
+10,},no
+11,function withdraw() {,no
+12,withdrawalCounter += 1;,no
+13,"require(fibonacciLibrary.delegatecall(fibSig, withdrawalCounter));",yes
+14,msg.sender.transfer(calculatedFibNumber * 1 ether);,no
+15,},no
+16,function() public {,no
+17,require(fibonacciLibrary.delegatecall(msg.data));,yes
+18,},no
+19,},no
+20,contract FibonacciLib {,no
+21,uint public start;,no
+22,uint public calculatedFibNumber;,no
+23,function setStart(uint _start) public {,no
+24,start = _start;,no
+25,},no
+26,function setFibonacci(uint n) public {,no
+27,calculatedFibNumber = fibonacci(n);,no
+28,},no
+29,function fibonacci(uint n) internal returns (uint) {,no
+30,if (n == 0) return start;,no
+31,else if (n == 1) return start + 1;,no
+32,else return fibonacci(n - 1) + fibonacci(n - 2);,no
+33,},no
+34,},no
